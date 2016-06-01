@@ -39,14 +39,15 @@ void sendRtcp(ScreamRx *screamRx, UDPSocket &socket)
 /* Receive incoming RTP packet and generate RTCP feedback */
 void recvRtp(ScreamRx *screamRx, UDPSocket &socket, Timerfd &feedbackTimer) 
 {
-  /* Feedback rate limits the target bitrate */
+  /* Feedback rate limits the target bitrate 
+   * Adopt the same value as in the original scream_01 experiment */
   static uint64_t feedbackInterval_us = 30000; 
-  static bool knowClient = false;
 
   UDPSocket::received_datagram recd = socket.recv();
   uint64_t recv_timestamp_us = recd.timestamp * 1000;
 
   /* Connect to client after knowing its address */
+  static bool knowClient = false;
   if (!knowClient) {
     knowClient = true;
     socket.connect(recd.source_address);
@@ -61,9 +62,11 @@ void recvRtp(ScreamRx *screamRx, UDPSocket &socket, Timerfd &feedbackTimer)
       << " at time " << recd.timestamp << endl;
   }
 
+  /* Receives RTP packet */
   screamRx->receive(recv_timestamp_us, 0, rtpPacket.header.ssrc, 
                     (int) rtpPacket.payload.size(), rtpPacket.header.seq_num); 
 
+  /* Generate RTCP feedback */
   if (screamRx->isFeedback()) {
     uint64_t sinceLastFeedback_us = timestamp_us() - screamRx->getLastFeedbackT();
     if (sinceLastFeedback_us > feedbackInterval_us) {
@@ -96,6 +99,7 @@ int main(int argc, char *argv[])
 
   ScreamRx *screamRx = new ScreamRx();
 
+  /* Timer to pace the feedback */
   Timerfd feedbackTimer(TFD_NONBLOCK);
 
   /* Always read the timer that returned POLLIN before arm it again */

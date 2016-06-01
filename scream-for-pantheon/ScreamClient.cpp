@@ -15,8 +15,8 @@
 
 using namespace std;
 
-const uint32_t SSRC = 10;
-const uint64_t tmax_ms = 40000; // run 40 seconds
+const uint32_t SSRC = 10; /* arbitrary synchronization source id of stream */
+const uint64_t tmax_ms = 40000; /* run 40 seconds */
 bool debug = false;
 
 /* Video encoder "encodes" new frames and updates target bitrate */
@@ -115,6 +115,7 @@ int main(int argc, char *argv[])
   float frameRate = 25.0f; /* encode 25 frames per second */
   ScreamTx *screamTx = new ScreamTx();
   RtpQueue *rtpQueue = new RtpQueue();
+  /* Adopt the same parameters as in the original scream_01 experiment */
   VideoEnc *videoEnc = new VideoEnc(rtpQueue, frameRate, 0.1f, false, false, 5);
   screamTx->registerNewStream(rtpQueue, SSRC, 1.0f, 64e3, 5e6, frameRate);
 
