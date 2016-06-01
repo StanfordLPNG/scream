@@ -8,8 +8,8 @@
 #include "util.hh"
 
 #include "ScreamRx.h"
-#include "Packet.h"
-#include "Timerfd.h"
+#include "Packet.hh"
+#include "Timerfd.hh"
 
 using namespace std;
 

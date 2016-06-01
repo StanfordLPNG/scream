@@ -10,8 +10,8 @@
 #include "ScreamTx.h"
 #include "RtpQueue.h"
 #include "VideoEnc.h"
-#include "Packet.h"
-#include "Timerfd.h"
+#include "Packet.hh"
+#include "Timerfd.hh"
 
 using namespace std;
 
