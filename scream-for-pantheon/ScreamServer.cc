@@ -23,10 +23,10 @@ void sendRtcp(ScreamRx *screamRx, UDPSocket &socket)
    * passed in screamRx->receive() divided by 1000 */
   uint32_t recv_timestamp_ms; 
   uint16_t ack_seq_num;
-  uint8_t num_loss;
+  uint64_t ack_vector;
   if (screamRx->getFeedback(timestamp_us(), ssrc, 
-      recv_timestamp_ms, ack_seq_num, num_loss)) {
-    RtcpPacket rtcpPacket(ssrc, ack_seq_num, (uint16_t) num_loss, recv_timestamp_ms);
+      recv_timestamp_ms, ack_seq_num, ack_vector)) {
+    RtcpPacket rtcpPacket(ssrc, ack_seq_num, ack_vector, recv_timestamp_ms);
     socket.send(rtcpPacket.to_string());
 
     if (debug) {

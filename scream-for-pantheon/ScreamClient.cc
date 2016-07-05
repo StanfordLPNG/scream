@@ -88,11 +88,11 @@ void recvRtcp(ScreamTx *screamTx, UDPSocket &socket)
   /* Server timestamp (ms) when received the RTP packet that is acked by RTCP */
   uint32_t server_recv_rtp_ts_ms = rtcpPacket.header.recv_timestamp;
   uint16_t ack_seq_num = rtcpPacket.header.ack_seq_num;
-  uint8_t num_loss = (uint8_t) rtcpPacket.header.num_loss;
+  uint64_t ack_vector = rtcpPacket.header.ack_vector;
 
   /* Calculate one-way delay and RTT inside, then update CWND */
   screamTx->incomingFeedback(client_recv_rtcp_ts_us, ssrc, server_recv_rtp_ts_ms,
-                             ack_seq_num, num_loss, false);
+                             ack_seq_num, ack_vector, false);
 }
 
 int main(int argc, char *argv[])
