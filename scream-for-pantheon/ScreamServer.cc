@@ -41,7 +41,7 @@ void recvRtp(ScreamRx *screamRx, UDPSocket &socket, Timerfd &feedbackTimer)
 {
   /* Feedback rate limits the target bitrate 
    * Adopt the same value as in the original scream_01 experiment */
-  static uint64_t feedbackInterval_us = 30000; 
+  static uint64_t feedbackInterval_us = 5000; 
 
   UDPSocket::received_datagram recd = socket.recv();
   uint64_t recv_timestamp_us = recd.timestamp * 1000;
